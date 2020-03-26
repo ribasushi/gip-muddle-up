@@ -10,8 +10,8 @@ import (
 	blkfmt "github.com/ipfs/go-block-format"
 	"github.com/ipfs/go-cid"
 	gocar "github.com/ipld/go-car"
+	_ "github.com/ipld/go-ipld-prime/encoding/dagcbor"
 	gipfree "github.com/ipld/go-ipld-prime/impl/free"
-	_ "github.com/ipld/go-ipld-prime/linking/cid"
 	gipselector "github.com/ipld/go-ipld-prime/traversal/selector"
 	gipselectorbuilder "github.com/ipld/go-ipld-prime/traversal/selector/builder"
 )
@@ -40,7 +40,7 @@ func main() {
 	root, _ := cid.Decode("bafy2bzaced4ueelaegfs5fqu4tzsh6ywbbpfk3cxppupmxfdhbpbhzawfw5oy")
 
 	var wrapper getFromBlockStore = func(c cid.Cid) (blkfmt.Block, error) {
-		os.Stderr.WriteString("Tick\n")
+		//log.Printf("Blockstore get %s\n", c.String())
 		if blk, exists := blockStore[c]; exists {
 			return blk, nil
 		}
@@ -79,11 +79,7 @@ func main() {
 		buf := make([]byte, 1024*1024)
 		for {
 			n, err := pipeR.Read(buf)
-			fmt.Fprintf(
-				os.Stderr,
-				"Read %d bytes\n",
-				n,
-			)
+			log.Printf("Written %d bytes of .car\n", n)
 
 			if err != nil {
 				return
